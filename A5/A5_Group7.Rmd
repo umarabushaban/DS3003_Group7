@@ -63,6 +63,10 @@ h3 {
 
 ```{r}
 # add your codes
+library(ggplot2)
+getwd()
+
+data = read.table("./income_exampl.dat")
 ```
 
 

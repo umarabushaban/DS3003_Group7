@@ -64,9 +64,9 @@ h3 {
 ```{r}
 # add your codes
 library(ggplot2)
+library(readr)
 getwd()
-
-data = read.table("./income_exampl.dat")
+data = read.table("./income_exmpl.dat")
 ```
 
 

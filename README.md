@@ -1,1 +1,2 @@
-# DS3003_Group7
+# DS 3003
+# Repo for Group 7

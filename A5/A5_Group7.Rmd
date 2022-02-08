@@ -1,6 +1,6 @@
 ---
 title: "Assignment 5 - ggplot2 (4 pts)"
-author: "Group #, NAME (UVA computing ID)"
+author: "Group 7, Umar Abushaban (uba6z), Aditya Kannoth (ank4an), Iain Muir (iam9ez)"
 date: "Due Date: 11:59pm, Feb 13"
 output:
   html_document:

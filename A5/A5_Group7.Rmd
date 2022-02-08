@@ -62,11 +62,38 @@ h3 {
 
 
 ```{r}
-# add your codes
 library(ggplot2)
 library(readr)
-getwd()
+#getwd()
 data = read.table("./income_exmpl.dat")
+```
+
+```{r}
+#Histogram
+ggplot(data) + 
+  geom_histogram(aes(x = oexp), bins = 20, color = "purple", fill = "pink") + 
+  theme_minimal()
+```
+```{r}
+#Kernel Density Estimate
+ggplot(data) +
+  geom_density(aes(x = oexp), color = "blue") +
+  theme_minimal()
+```
+
+```{r}
+#Boxplot
+ggplot(data, aes(x = oexp)) +
+  geom_boxplot() +
+  theme_bw()
+```
+```{r}
+#Set of boxplots showing the distribution of “oexp” by sex crossed with occupational status (“occ”). 
+ggplot(data, aes(x = oexp, y = sex)) + 
+  geom_boxplot() + 
+  theme_bw()
+
+#still have to cross this with occ^
 ```
 
 

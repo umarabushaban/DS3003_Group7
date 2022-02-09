@@ -100,16 +100,6 @@ grid.arrange(p1,p2,p3,p4, ncol=2)
 
 ```
 
-#for reference
-```{r}
-#ggplot(cancer, aes(x=diagnosis, y=radius_mean,color = diagnosis)) +
-#  geom_point(alpha = 1/20) +
-#  geom_point(size=0.1) +
-#  labs(title = "Diagnosis by Radius", x="Diagnosis", y="Radius",) +
-#  scale_color_manual(labels = c("benign", "malignant"), values = c("green", "red")) +
-#  scale_x_discrete(labels=c("1" = "malignant", "0" = "benign"))
-```
-
 # Part 2
 
 - Use the SCS Data set you downloaded from Collab for Assignment 4, and investigate the relationship between the mathematics achievement score (“mathpre”) and the math anxiety score (“mars”) by plotting the data. 

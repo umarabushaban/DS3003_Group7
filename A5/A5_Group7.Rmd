@@ -72,26 +72,38 @@ data = read.table("./income_exmpl.dat")
 #Histogram
 ggplot(data) + 
   geom_histogram(aes(x = oexp), bins = 20, color = "purple", fill = "pink") + 
-  theme_minimal()
+  theme_minimal() + 
+  labs(title = "Oexp Histogram", x="Occ Experience", y="Count",)
+
+
+#ggplot(cancer, aes(x=diagnosis, y=radius_mean,color = diagnosis)) +
+#  geom_point(alpha = 1/20) +
+#  geom_point(size=0.1) +
+#  labs(title = "Diagnosis by Radius", x="Diagnosis", y="Radius",) +
+#  scale_color_manual(labels = c("benign", "malignant"), values = c("green", "red")) +
+#  scale_x_discrete(labels=c("1" = "malignant", "0" = "benign"))
 ```
 ```{r}
 #Kernel Density Estimate
 ggplot(data) +
   geom_density(aes(x = oexp), color = "blue") +
-  theme_minimal()
+  theme_minimal() +
+  labs(title = "Oexp Kernel Density Estimate", x="Occ Experience", y="Density ",)
 ```
 
 ```{r}
 #Boxplot
 ggplot(data, aes(x = oexp)) +
-  geom_boxplot() +
-  theme_bw()
+  geom_boxplot(color="blue", fill="pink", alpha=0.4) +
+  theme_bw() +
+  labs(title = "Oexp Boxplot", x="Occ Experience", y="Count")
 ```
 ```{r}
 #Set of boxplots showing the distribution of “oexp” by sex crossed with occupational status (“occ”). 
-ggplot(data, aes(x = oexp, y = sex)) + 
-  geom_boxplot() + 
-  theme_bw()
+ggplot(data, aes(x = oexp, y = sex, color = sex)) + 
+  geom_boxplot(fill="gray", alpha=0.2) + 
+  theme_bw() +
+  labs(title = "Occ. Experience by Sex Boxplot ", x="Occ. Experience", y="Sex")
 
 #still have to cross this with occ^
 ```

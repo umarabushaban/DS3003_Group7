@@ -172,12 +172,27 @@ knitr::kable(dat_dept)
 - Draw plots to provide evidence of Simpson's Paradox. 
 
 ```{r}
-# add your codes
+library(ggplot2)
+
+# General admissions rates for males vs. females
+ggplot(dat_agg, aes(x=Gender, y = Prop)) + geom_bar(stat="identity") + labs(x = 'Gender', y = 'Admissions Rate', title = "UC Berkeley Admissions Rate by Gender")
+
+# Broken up by department, showing that females actually have higher admission rates in the majority of departments, 4 to 2
+ggplot(dat_dept, aes(x=Dept, y=Prop)) + geom_point() + labs(x = 'Department', y = 'Admissions Rate', title = "UC Berkeley Admissions Rate by Department") + theme_bw() + geom_text(aes(Dept, Prop, label=Gender), position = position_nudge(x = 0.3))
+
+# Coordinating Plot that shows the admissions rates are similar across departments
+ggplot(dat_dept, aes(x=Dept, y=Prop)) + geom_point() + labs(x = 'Department', y = 'Admissions Rate', title = "UC Berkeley Admissions Rate by Department") + theme_bw() + facet_wrap(~ Gender)
 ```
 
 - Describe in words the relation between the admission rate and gender.
 
-*describe your plots.*
+The first plot shows general admissions rates for males vs. females. We can see that there appears to be a serious discrepancy - males are admitted at a rate of approximately 45% compared to 30% for females.
+
+The second plot shows admission rates broken up by department, showing that females actually have higher admission rates in the majority of departments, 4 to 2.
+
+The third plot shows this same information in a coordinating plot, further confirming that the distribution of admission rates does not exhibit such bias.
+
+The evidence of Simpson's paradox is thus displayed - the difference in admission rate between males and females has to do with the fact that more females applied to the most competitive departments, while more males applied to the least competitive departments.
 
 - One of the group members will **present R codes and plots** for Part 3 in class on **Feb. 14 (Tue)**.  Also, if you're a presenter, please bring your laptop so that you can share your screen on zoom for the presentation.
 

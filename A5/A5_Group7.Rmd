@@ -73,7 +73,7 @@ data = read.table("./income_exmpl.dat")
 ```{r}
 #Histogram
 p1 = ggplot(data) + 
-  geom_histogram(aes(x = oexp), bins = 20, color = "purple", fill = "pink") + 
+  geom_histogram(aes(x = oexp), bins = 25, color = "purple", fill = "pink") + 
   theme_minimal() + 
   labs(title = "Oexp Histogram", x="Occ Experience", y="Count",)
 
@@ -90,11 +90,11 @@ p3 = ggplot(data, aes(x = oexp)) +
   labs(title = "Oexp Boxplot", x="Occ Experience", y="Count")
 
 #Set of boxplots showing the distribution of “oexp” by sex crossed with occupational status (“occ”). 
-p4 = ggplot(data, aes(x = oexp, y = sex, color = occ)) + 
-  geom_boxplot(fill="gray", alpha=0.2) + 
+p4 = ggplot(data, aes(x = oexp, y = occ, fill = sex)) + 
+  geom_boxplot() + 
   theme_bw() +
-  labs(title = "Occ. Experience by Sex Boxplot ", x="Occ. Experience", y="Sex") +
-  scale_y_discrete(labels=c("m" = "Male", "f" = "Female"))
+  labs(title = "Occ. Experience by Sex Boxplot ", x="Occ. Experience", y="Sex")+
+  coord_flip()
 
 grid.arrange(p1,p2,p3,p4, ncol=2)
 

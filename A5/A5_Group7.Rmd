@@ -107,13 +107,22 @@ grid.arrange(p1,p2,p3,p4, ncol=2)
 (i) Produce a scatterplot between “mathpre” and “mars”. You might consider using function `geom_jitter()` or the argument `alpha` from package `ggplot2` for avoiding overlying points.
 
 ```{r}
-# add your codes
+library(foreign)
+SCS = read.spss("./SCS_QE.sav", to.data.frame = TRUE)
+```
+```{r}
+ggplot(SCS, aes(mathpre, mars)) +
+  geom_jitter(color="blue") +
+  labs(title = "Math Score vs Math Anxiety Scatterplot ", x="Pretest Score", y="Math Anxiety")
 ```
 
 (ii) Draw a conditioning plot for female and male students (variable “male”). Add `+ facet_wrap()` or  `+ facet_grid()` in your first argument to create a conditioning plot.
 
 ```{r}
-# add your codes
+ggplot(SCS, aes(mathpre, mars)) +
+  geom_jitter() +
+  facet_wrap(~male) +
+  labs(title = "Math Score vs Math Anxiety Scatterplot ", x="Pretest Score", y="Math Anxiety")
 ```
 
 

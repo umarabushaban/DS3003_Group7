@@ -93,41 +93,14 @@ lines(
 )
 ```
 
-```{r eval=FALSE, include=FALSE}
-# TODO -- install car... scatterplot()
-
-install.packages("car")
+```{r}
+# car scatterplot
 library(car)
 
-scatterplot(
-  
-  
-  main="scatterplot()"
-)
-# X-value Sequence
-x.val <- seq(0, max(SCS$mathpre), by = .5)
-
-# ------ LOcal regrESSion ------
-out.lss <- loess(
-  mars ~ mathpre, 
-  data=SCS,
-  span=.2, 
-  degree=0
-)
-# Get Predicted Values
-y.pred <- predict(
-  out.lss, 
-  data.frame(mathpre=x.val)
-)  
-# Plot Predicted Values
-lines(
-  x.val, 
-  y.pred, 
-  col='red',
-  lwd=2
-)
+scatterplot(SCS$mars, SCS$mathpre)
 ```
 
+The second scatterplot using the car package appears to automatically format the regression line, as well as include boxplots on the axes. We can see the same negative relationship between increased math anxiety and decreased score.
 
 **(2) Draw separate regression smoothers for female and male students (variable “male”). Use `loess()`.**
 

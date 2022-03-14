@@ -55,7 +55,20 @@ data(EuStockMarkets) # load EuStockMarkets
 dat <- as.data.frame(EuStockMarkets) # coerce it to a data frame
 dat$time <- time(EuStockMarkets) # add `time` variable
 
-# add your codes
+dat$time = as.numeric(dat$time)
+
+long_dat <- gather(dat,
+                  key = index_att,
+                  value = measurement, 
+                  DAX:FTSE)
+#View(long_dat)
+
+plot_ly(long_dat,
+        x = ~time,
+        y = ~measurement,
+        color = ~index_att,
+        type = 'scatter',
+        mode = 'lines')
 ```
 
 # Part 2

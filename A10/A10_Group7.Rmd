@@ -1,0 +1,106 @@
+---
+title: "Assignment 10 - plotly & Uncertainty"
+author: "Group 7"
+date: "Due Date: 11:59pm, Mar 20"
+output: ioslides_presentation
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(knitr)
+```
+
+## Group Homework 
+
+- You will work with your group to complete this assignment.
+
+- Upload your `html` file on [RPubs](https://rpubs.com) and include the link when you submit your submission files on Collab. 
+
+- Submit your group's shared `.Rmd` AND "knitted"`.html` files on Collab.
+
+- Note that this `html` file is now uploaded on [RPubs](https://rpubs.com/DS3003/A11).
+
+## Group Homework
+
+- Your "knitted .html" submission must be created from your "group .Rmd" but be created on your own computer.
+    
+- Confirm this with the following comment included in your submission text box: **"Honor Pledge: I have recreated my group submission using using the tools I have installed on my own computer"**
+    
+- Name the files with a group name and YOUR name for your submission.
+
+- *Each group member must be able to submit this assignment as created from their own computer. If only some members of the group submit the required files, those group members must additionally provide a supplemental explanation along with their submission as to why other students in their group have not completed this assignment.*
+
+# Part 1 
+
+## Part 1: Instruction 
+
+- Use the `EuStockMarkets` data that contains the daily closing prices of major European stock indices: Germany DAX (Ibis), Switzerland SMI, France CAC, and UK FTSE. Then, create multiple lines that show changes of each index's daily closing prices over time.
+
+- Please use function `gather` from package `tidyr` to transform the data from a wide to a long format. For more info, refer to our lecture materials on dataformats (i.e., `DS3003_dataformat_facets_note.pdf`, `DS3003_dataformat_facets_code.rmd`, or `DS3003_dataformat_facets_code.html`
+
+- Use function `plot_ly` from package `plotly` to create a line plot. 
+
+## Part 1: Example 
+
+- see the `html` file.
+
+
+##  Part 1: Results
+
+```{r, message=FALSE}
+library(tidyr) # load tidyr package
+library(plotly) # load plotly package
+
+data(EuStockMarkets) # load EuStockMarkets
+dat <- as.data.frame(EuStockMarkets) # coerce it to a data frame
+dat$time <- time(EuStockMarkets) # add `time` variable
+
+# add your codes
+```
+
+# Part 2
+
+## Part 2: Instruction 
+
+- Use the SCS Data set you downloaded from the previous group assignments, and then investigate the relationship between the mathematics achievement score (“mathpre”) and the math anxiety score (“mars”).
+
+- Plot the data, linear line, and **bootstrap confidence envelopes**. Use 2,000 bootstrap replicates (i.e., R=2000) in function `boot`, and add appropriate x- and y- labels, and a title to the graph.
+
+- Please refer to *section: Linear regression with bootstrap confidence intervals* in `DS3003_visualizingerrors_reg_note.html` and `DS3003_visualizingerrors_reg_code.html`.
+
+```{r}
+# add your codes
+```
+
+# Part 3
+
+## Part 3: Instruction 
+
+- Create WHO Reporting Barplots **with error bars** separated by `WHO region` using either `facet_grid` or `facet_wrap`.
+
+- First, get the latest data from from [https://covid19.who.int/table](https://covid19.who.int/table).
+      
+   - The file should likely be named "WHO COVID-19 global table data March XXth 2022 at XXXXX.csv"
+       
+   - Don't use the data that I uploaded on Collab. It's not the most recent data. 
+
+
+## Part 3: Instruction (Cont'd)
+
+- Second, create a subset including 3 countries per `WHO region` (Africa, Americas, Eastern Mediterranean, Europe, South-East Asia, Western Pacific). You can choose any three countries within each `WHO region` to compare the mortality rate (`mutate(rate = "Deaths - cumulative total"/"Cases - cumulative total")`). 
+
+- Third, draw bar plots with error bars using your subset, but adjust the graph in the facets using either `facet_grid` or `facet_wrap` (e.g., `facet_grid(~ "WHO region", scale="free")`. Please include `scale="free"` in your `facet` function.
+
+```{r}
+# add your codes
+```
+
+## Part 3: Example
+
+```{r, echo=FALSE, out.width="100%"}
+knitr::include_graphics("A10_Part3_exp.png")
+```
+
+
+- One of the group members will **present R codes and plots** for Part 3 in class on **Mar. 21 (Mon)**.  Also, if you're a presenter, please bring your laptop so that you can share your screen on zoom for the presentation.
+

@@ -105,14 +105,71 @@ plot_ly(long_dat,
 - Third, draw bar plots with error bars using your subset, but adjust the graph in the facets using either `facet_grid` or `facet_wrap` (e.g., `facet_grid(~ "WHO region", scale="free")`. Please include `scale="free"` in your `facet` function.
 
 ```{r}
-# add your codes
+library(ggplot2)
+library(dplyr)
 ```
+
+```{r}
+covid <- read.csv('WHO-COVID-19.csv')
+cat('Dimensions: ', dim(covid))
+names(covid) = c('Country', 'WHO_Region', 'CumulativeCases', 'CCper1000', 'CC_Last7', 'CC_Last7_per1000', 'CC_Last24hr',
+                   'CumulativeDeaths', 'CDper1000', 'CD_Last7', 'CD_Last7_per1000', 'CD_Last24hr')
+head(covid)
+```
+
+```{r}
+Countries = c(
+  'Botswana', 'Cabo Verde', 'Cameroon',
+  'Aruba', 'Belize', 'Bermuda',
+  'Egypt', 'Jordan', 'Kuwait',
+  'Austria', 'Belgium', 'Bosnia and Herzegovina',
+  'India', 'Myanmar', 'Nepal',
+  'Cambodia', 'Fiji', 'French Polynesia'
+)
+```
+
+```{r}
+covid_2 %>% 
+  filter(Country %in% Countries) %>% 
+  mutate(
+    rate=(CumulativeDeaths) / (CumulativeCases),
+    SE=sqrt(rate*(1-rate)/CumulativeCases)
+  ) %>% 
+  ggplot(
+    aes(
+      x=Country, 
+      y=rate
+    )
+  ) + 
+  geom_col() +
+  theme_bw() + 
+  theme(
+    axis.text.x=element_text(
+      angle=90,
+      hjust=0.95,
+      vjust=0.20
+    )
+  ) + 
+  xlab('WHO: # Reported Deaths / # Reported Cases') + 
+  ylab('Mortality Rate') + 
+  geom_errorbar(
+    aes(
+      ymin=rate-1.96*SE, 
+      ymax=rate+1.96*SE
+    ), 
+    width=0.25
+  ) + 
+  facet_grid(~WHO_Region, scale="free")
+```
+
 
 ## Part 3: Example
 
 ```{r, echo=FALSE, out.width="100%"}
 knitr::include_graphics("A10_Part3_exp.png")
 ```
+
+
 
 
 - One of the group members will **present R codes and plots** for Part 3 in class on **Mar. 21 (Mon)**.  Also, if you're a presenter, please bring your laptop so that you can share your screen on zoom for the presentation.

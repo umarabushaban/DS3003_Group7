@@ -82,7 +82,32 @@ plot_ly(long_dat,
 - Please refer to *section: Linear regression with bootstrap confidence intervals* in `DS3003_visualizingerrors_reg_note.html` and `DS3003_visualizingerrors_reg_code.html`.
 
 ```{r}
-# add your codes
+library(foreign)
+SCS = read.spss("./SCS_QE.sav", to.data.frame = TRUE)
+
+incex = SCS[, c("mathpre", "mars")]
+
+b.stat <- function(data, i)
+{
+   b.dat <- data[i ,]
+   out.lm <- lm(mathpre ~ mars, b.dat)
+   predict(out.lm, data.frame(mars=incex2$mars))   
+}
+
+incex2 <- incex[1:100,]
+
+b.out <- boot(incex2, b.stat, R = 2000) # R = num of replications
+
+boot.ci(b.out, index = 1, type = 'perc') # 95% CI for the first observation
+
+b.ci <- t(sapply(1:nrow(incex2), function(x) boot.ci(b.out, index = x, type = 'perc')$percent))[, 4:5]
+dimnames(b.ci) <- list(rownames(incex2), c('lower', 'upper'))
+
+incex4 <- cbind(incex2, b.ci) # combine two datasets
+ggplot(incex4, aes(x=mars, y=mathpre)) + geom_point(alpha=0.2) + labs(x = 'Math Anxiety Score', y = 'Math Achievement Score', title = "Relationship Between Math Anxiety and Math Achievement Scores") + theme_bw() + 
+        geom_smooth(method='lm', formula= y~x, se = FALSE) +
+        geom_ribbon(aes(ymin = lower, ymax = upper), alpha = 0.3, fill="#69b3a2")
+
 ```
 
 # Part 3

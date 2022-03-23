@@ -8,7 +8,7 @@ output:
     toc: yes
     toc_float: yes
     code_folding: show
-# runtime: shiny    
+runtime: shiny    
 ---
 
 ```{r setup, include=FALSE}
@@ -57,15 +57,9 @@ library(foreign)
 
 # Part 2
 
-- Use a dataset that is available in data repositories (e.g., [kaggle](https://www.kaggle.com/datasets)). But don't use the datasets you used for your previous assignments.
-
-- Briefly describe the dataset you're using for this assignment (e.g., means to access data, context, sample, variables, etc...)
-  
-   + *describe your data.*
+The dataset I'm using for this assignmnet is a camera dataset I found on kaggle. It contains 13 properties for over 1000 cameras, ranging from variables such as max resolution, year, model, effective pixels, etc. I'm going to take two continuous variables and see the relationship between them using a loess scatterplot and shiny.
    
-- Select *two* continuous variables (denoted as "A" and "B") 
-
-- Create an interactive scatterplot between "A" and "B" with a loess line using Shiny app. Please refer to lecture notes `DS3003_localreg_loess_note.pdf`, `DS3003_localreg_loess_code.rmd`, and `DS3003_localreg_loess_code.html` 
+The two continous variables I'm going to look at are 1) Maximum Resolution, and 2) Release Date. I'm going to try and see if there is a relationship between these variables. I feel that there should be a positive linear relationship, as I would imagine that as time goes on and technology advances, the maximum resolution for cameras should increase.
 
 - You need to create two input variables for loess regression. 
 
@@ -75,8 +69,25 @@ library(foreign)
 - You can choose appropriate control types from [Widget gallery](https://shiny.rstudio.com/gallery/widget-gallery.html).
      
 ```{r}
-# add your codes 
+
+camera = read_csv("./camera_dataset.csv")
+A = camera$`Max resolution`
+B = camera$`Release date`
+
+inputPanel(
+  sliderInput("span", label = "Span adjustment:",
+              min = 0.2, max = 0.9, value = 0.5, step = 0.1)
+)
+
+renderPlot({
+  ggplot(camera, aes(x=`Max resolution`, y=`Release date`)) +
+    geom_point() +
+    geom_smooth(method="loess", formula=y~x, se=FALSE, span=input$span) +
+    theme_bw()
+})
+
 ```
 
 - Describe a relationship between A and B. Also, describe how a loess line changes as the degree increases and/or the span value increases.
 
+The relationship between A and B seems to be positive linear. However, towards the end (years 2004-2006), the cameras seem to not increase in max resolution so rapidly. The loess plot graphs a downward trend towards the end, but it is hard to say that this is the case in a general sense without a broader scope of data. However given this data, it seems to have positive linear growth until it reaches a plateau where it slows down. This could be because more budget and travel sized cameras were being made in those years so max resolution was not prioritized, among other reasons. As the degree and span value increases, the line tends to become more smooth. 

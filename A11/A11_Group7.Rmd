@@ -52,7 +52,31 @@ library(foreign)
 - Example: https://youmi.shinyapps.io/A11examplePart1/
 
 ```{r}
-# add your codes 
+library(readr)
+covid <- read_csv("WHO-COVID-19-global-table-data.csv")
+View(covid)
+
+subset <- c('Botswana', 'Cabo Verde', 'Cameroon', 'Aruba', 'Belize', 
+           'Bermuda', 'Egypt', 'Jordan', 'Kuwait', 'Austria', 'Belgium', 'Bosnia and Herzegovina', 'India', 'Myanmar', 'Nepal', 'Cambodia', 'Fiji', 'French Polynesia')
+
+covid_subset <- covid %>% filter(Name %in% subset) %>% 
+  mutate(rate = `Deaths - cumulative total`/`Cases - cumulative total`,
+         SE = sqrt(rate*(1-rate)/`Cases - cumulative total`))
+
+inputPanel(
+  selectInput("country", label = "Country:",
+              choices = c("Africa", "Americas", "Eastern Mediterranean", "Europe", "South-East Asia", "Western Pacific"),
+              selected = "Africa")
+)
+
+renderPlot({
+  ggplot(covid_subset[covid_subset$`WHO Region` == input$country,], aes(x = Name, y = rate)) +
+    geom_bar(stat = "identity") +
+    facet_wrap(~ `WHO Region`, scale = "free") +
+    theme_bw() + labs(main = "Covid Mortality Rate of Countries Seperated by WHO Region", x = "Name", y = "Mortality rate") +
+    geom_errorbar(aes(ymin=rate-sd(rate), ymax=rate+sd(rate)), width=.2,
+                 position=position_dodge(.9)) 
+})
 ```
 
 # Part 2
@@ -69,6 +93,8 @@ The two continous variables I'm going to look at are 1) Maximum Resolution, and 
 - You can choose appropriate control types from [Widget gallery](https://shiny.rstudio.com/gallery/widget-gallery.html).
      
 ```{r}
+#HAVE TO ADD: control type for degree
+#One input variable is the degree with values of 0, 1, and 2.
 
 camera = read_csv("./camera_dataset.csv")
 A = camera$`Max resolution`
@@ -90,4 +116,4 @@ renderPlot({
 
 - Describe a relationship between A and B. Also, describe how a loess line changes as the degree increases and/or the span value increases.
 
-The relationship between A and B seems to be positive linear. However, towards the end (years 2004-2006), the cameras seem to not increase in max resolution so rapidly. The loess plot graphs a downward trend towards the end, but it is hard to say that this is the case in a general sense without a broader scope of data. However given this data, it seems to have positive linear growth until it reaches a plateau where it slows down. This could be because more budget and travel sized cameras were being made in those years so max resolution was not prioritized, among other reasons. As the degree and span value increases, the line tends to become more smooth. 
+The relationship between A and B seems to be positive linear. However, towards the end (years 2004-2006), the cameras seem to not increase in max resolution so rapidly. The loess plot graphs a downward trend towards the end, but it is hard to say that this is the case in a general sense without a broader scope of data. However given this data, it seems to have positive linear growth until it reaches a plateau where it slows down. This could be because more budget and travel sized cameras were being made in those years so max resolution was not prioritized, among other reasons. As the degree and span value increases, the line tends to become more smooth. This is because the span value is determining the width of the moving window when smoothing the data.

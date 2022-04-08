@@ -1,0 +1,167 @@
+---
+title: "Assignment 16 - Animations (4 pts)"
+author: "Group 7, Aditya Kannoth (ank4an)"
+date: "Due Date: 11:59pm, Apr 10"
+output:
+  html_document:
+    number_sections: yes
+    toc: yes
+    toc_float: yes
+    code_folding: show
+  runtime: shiny    
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo=FALSE, message=FALSE, warning=FALSE)
+library(tidyverse)
+library(shiny)
+library(shinythemes)
+```
+
+# Group Homework 
+
+- You will work with your group to complete this assignment.
+.
+- Submit your group's shared `.Rmd` AND your kintted `html` on Collab.
+
+- You **don't** need to upload the html file on RPubs. 
+
+- Confirm this with the following comment included in your submission text box: **"Honor Pledge: I have recreated my group submission using using the tools I have installed on my own computer"**
+    
+- Name the files with a group name and YOUR name for your submission.
+
+
+# Part 1: `gganimate`
+
+- First, get the latest data from [OWID](https://ourworldindata.org/covid-deaths).
+      
+   - The file should likely be named "owid-covid-data.xlsx" or "owid-covid-data.csv." (or jason file)
+      
+- Second, choose six countries that are of interest to you, and create a subset with the six countries.
+
+- Third, create an animated line plot of "Covid Deaths Each Day Per 100,000 People in Countries" as in our lecture note on Animations.  
+
+
+```{r}
+library(tidyverse)
+library(readxl)
+
+OWID_covid <- read.csv("owid-covid-data.csv")
+OWID_covid
+```
+
+```{r}
+focus <- OWID_covid %>% 
+  filter(population > 10000000) %>%
+  filter(location != 'World') %>%
+  filter(continent %in% c('Europe', 'North America')) %>%
+  mutate(per_capita_deaths = total_deaths/population) %>%
+  dplyr::select(location, per_capita_deaths) %>% 
+  group_by(location) %>% 
+  top_n(n=1) %>% 
+  arrange(-per_capita_deaths) %>%
+  distinct()  
+  
+focus
+
+```
+
+```{r}
+OWID_covid$date <- as.Date(OWID_covid$date)
+
+covid_per_capita_fig <- OWID_covid %>% 
+  filter(location %in% focus$location[13:18]) %>%
+  ggplot(mapping=aes(x=date, y=100000*new_deaths_smoothed/population,
+                     color=location, linetype=continent, group=location)) + 
+  geom_line() + 
+  theme_bw() + 
+  theme(legend.position="top", legend.title=element_blank(), 
+        legend.direction="horizontal", legend.box="vertical") +
+  labs(title="Covid Deaths Each Day Per 100,000 People in Countries", x="Date", y="Mortality rate")
+
+covid_per_capita_fig
+```
+
+```{r}
+# install.packages("gganimate")
+library(gganimate)
+
+covid_per_capita_fig + geom_point() + transition_reveal(date)  
+```
+
+- Fourth, describe your findings from the plot.
+The main takeaway from this plot is by and large, although some countries have very high spikes, each country peaks in deaths per capita at the same times. The real outlier in terms of a spike is Portugal in January and February 2021 - this spike was much higher than the next highest country, Sweden, who were known for their more lax enforcement of COVID rules. 
+
+
+# Part 2: `plotly`
+
+- Create an animated plot with the `Play` button from package `plotly`. Please refer to our lecture note on Animations, [feature of plotly](https://plotly.com/r/animations/), and [cumulative anmiations](https://plotly.com/r/cumulative-animations/).
+
+- First, use an appropriate dataset that is available in data repositories (e.g., [kaggle](https://www.kaggle.com/datasets)). But don't use the built-in datasets or datasets from packages. Don't use any datasets you used for the previous assignments.
+
+```{r}
+library(plotly)
+library(dplyr)
+```
+
+```{r}
+life_expectancy = read.csv("life_expectancy.csv")
+```
+
+- Second, briefly describe the dataset you're using for this assignment (e.g., means to access data, context, sample, variables, etc...)
+
+Our dataset is sourced from [Kaggle](https://www.kaggle.com/); here is the [link](https://www.kaggle.com/datasets/kumarajarshi/life-expectancy-who) to the dataset. Specifically, it contains statistics relating to life expectancy for 193 countries in the world over the past 15 years. For context, it has been observed that in the past 15 years there has been a huge development in health sector resulting in improvement of human mortality rates especially in the developing nations in comparison to the past 30 years.
+
+**Relevant Data Dictionary**  
+GDP: GDP per Capita of the Country
+Life.expectancy: % Life Expectancy (out of 100)
+Population: Total Population
+Status: Development Status (Developed or Developing)
+Year: Year of Data
+
+**Source and References**  
+The data was collected from WHO and United Nations website with the help of Deeksha Russell and Duan Wang.
+
+```{r}
+cat("Dimensions: ", dim(life_expectancy))
+head(life_expectancy)
+```
+   
+- Third, create any animated plot with the `Play` button.  
+
+```{r}
+
+
+fig <- life_expectancy %>%
+  plot_ly(
+    x = ~GDP, 
+    y = ~Life.expectancy, 
+    size = ~Population, 
+    color = ~Status, 
+    frame = ~Year, 
+    text = ~paste(
+      "Country:", Country,
+      "\nGDP: ", GDP,
+      "\nLife Expectancy: ", Life.expectancy
+    ), 
+    hoverinfo = "text",
+    type = 'scatter',
+    mode = 'markers'
+  )
+fig <- fig %>% layout(
+    xaxis = list(
+      type = "log"
+    )
+  )
+fig <- fig %>%
+  animation_opts(
+    1000, easing = "elastic", redraw = FALSE
+  )
+
+fig
+```
+
+- Fourth, describe your findings from the animated plot. 
+
+The animated plotly chart clearly confirms the idea that health sector development has led to increases in life expectancy across the board over the past 15 years. Additionally, with GDP per capita on the x-axis and the development status of a nation shown by the color, it is evident that more developed and wealthier nations have higher life expectancies.
+
